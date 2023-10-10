@@ -70,6 +70,9 @@ dependencies {
     implementation(deps.compose.uiToolingPreview)
     implementation(deps.compose.runtime)
 
+    //Google Accompanist
+    implementation(deps.accompanist)
+
     // Screen Navigation
     implementation(deps.voyagerNavigator)
 }

@@ -1,8 +1,9 @@
 package com.forbes.doglist.android
 
 import android.app.Application
-import com.forbes.doglist.app.FeedStore
-import com.forbes.doglist.core.dataSource.remote.DogFeedReader
+import com.forbes.doglist.app.DogDetailsStore
+import com.forbes.doglist.app.DogListStore
+import com.forbes.doglist.core.dataSource.remote.DogAppReader
 import com.forbes.doglist.create
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -16,8 +17,9 @@ class DogListApp : Application() {
     }
 
     private val appModule = module {
-        single { DogFeedReader.create() }
-        single { FeedStore(get()) }
+        single { DogAppReader.create() }
+        single { DogListStore(get()) }
+        single { DogDetailsStore(get()) }
     }
 
     private fun initKoin() {

@@ -6,4 +6,5 @@ object URLConstants {
 
     const val DOG_LIST_ENDPOINT = "api/breeds/list/all"
     const val DOG_RANDOM_IMAGE_ENDPOINT = "api/breed/%s/images/random"
+    const val DOG_IMAGE_LIST_ENDPOINT = "api/breed/%s/images/random/5"
 }

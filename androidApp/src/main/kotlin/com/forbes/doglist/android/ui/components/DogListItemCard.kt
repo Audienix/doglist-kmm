@@ -35,19 +35,19 @@ import com.forbes.doglist.core.models.DogBreed
 import com.forbes.doglist.util.extensions.capitalizeFirstLetter
 
 /**
- * Composables for each dog breed item in the list.
+ * Composable for each dog breed item in the list.
  *
  * @author: Arighna Maity
  */
 @Composable
-fun DogListItemCard(dog: DogBreed, onItemClicked: (dog: DogBreed) -> Unit) {
+fun DogListItemCard(dog: DogBreed, onItemClicked: (dogBreed: DogBreed) -> Unit) {
     Card(
         border = BorderStroke(
             dimensionResource(id = R.dimen.dimension_stroke_width_low),
-            MaterialColorPalette.surfaceContainer
+            MaterialColorPalette.surfaceContainerHigh
         ),
         shape = Shapes.medium,
-        colors = CardDefaults.cardColors(containerColor = MaterialColorPalette.surfaceContainerLowest),
+        colors = CardDefaults.cardColors(containerColor = MaterialColorPalette.surfaceContainerLow),
         modifier = Modifier
             .padding(dimensionResource(id = R.dimen.dimension_4dp))
             .fillMaxWidth()

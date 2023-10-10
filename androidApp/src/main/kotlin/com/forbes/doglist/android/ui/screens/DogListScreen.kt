@@ -1,5 +1,6 @@
 package com.forbes.doglist.android.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,14 +11,19 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.screen.Screen
-import com.forbes.doglist.app.FeedAction
-import com.forbes.doglist.app.FeedStore
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.forbes.doglist.app.AppActions
+import com.forbes.doglist.app.DogListStore
 import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.components.DogListItemCard
 import com.forbes.doglist.android.ui.components.LoadingState
@@ -25,6 +31,9 @@ import com.forbes.doglist.android.ui.components.TopBar
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 import com.forbes.doglist.android.ui.theme.SetStatusBarColor
 import com.forbes.doglist.android.utils.getGridCellCount
+import com.forbes.doglist.app.SideEffect
+import com.forbes.doglist.app.DogListState
+import kotlinx.coroutines.flow.filterIsInstance
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -33,48 +42,67 @@ class DogListScreen : Screen, KoinComponent {
     @Composable
     override fun Content() {
         SetStatusBarColor(statusBarColor = MaterialColorPalette.surfaceContainerLow)
-
-        val store: FeedStore by inject()
-
-        LaunchedEffect(Unit) {
-            store.dispatch(FeedAction.Refresh(true))
-        }
+        val state = getNetworkState()
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialColorPalette.surface),
-            topBar = { TopBar() },
+            topBar = {
+                TopBar(title = stringResource(id = R.string.title_home))
+            },
             content = { padding ->
                 ShowDogListScreenContent(
                     padding = padding,
-                    store = store
-                ) {}
+                    state = state
+                )
             },
             containerColor = MaterialColorPalette.surface, // somehow this doesn't work in dark mode
         )
     }
+
+    @Composable
+    private fun getNetworkState(): State<DogListState> {
+        val store: DogListStore by inject()
+        val error = store.observeSideEffect()
+            .filterIsInstance<SideEffect.Error>()
+            .collectAsState(null)
+        val context = LocalContext.current
+        LaunchedEffect(error.value) {
+            error.value?.let {
+                Toast.makeText(context, it.error.message, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        val state = store.observeState().collectAsState()
+        LaunchedEffect(Unit) {
+            if (state.value.dogBreeds.isEmpty())
+                store.dispatch(AppActions.FetchDogList)
+        }
+        return state
+    }
 }
 
 @Composable
-fun ShowDogListScreenContent(
+private fun ShowDogListScreenContent(
     modifier: Modifier = Modifier,
     padding: PaddingValues,
-    store: FeedStore,
-    onClick: (String) -> Unit
+    state: State<DogListState>
 ) {
-    val state = store.observeState().collectAsState()
-    val dogs = remember(state.value.feeds) { state.value.feeds }
+    val dogs = remember(state.value.dogBreeds) { state.value.dogBreeds }
 
-    if (state.value.progress && state.value.feeds.isEmpty()) {
+    if (state.value.progress && state.value.dogBreeds.isEmpty()) {
         LoadingState(modifier)
     } else {
+        val navigator = LocalNavigator.currentOrThrow
         LazyVerticalGrid(
-            modifier = modifier.padding(horizontal = dimensionResource(id = R.dimen.dimension_8dp)),
+            modifier = modifier.padding(dimensionResource(id = R.dimen.dimension_8dp)),
             columns = GridCells.Fixed(getGridCellCount(configuration = LocalConfiguration.current)),
             contentPadding = padding,
             content = {
                 itemsIndexed(dogs) { i, dog ->
-                    DogListItemCard(dog) {}
+                    DogListItemCard(dog = dog, onItemClicked = {
+                        navigator.push(item = DogDetailsScreen(dog))
+                    })
                 }
             })
     }

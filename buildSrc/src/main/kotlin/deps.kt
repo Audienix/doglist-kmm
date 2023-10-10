@@ -68,6 +68,8 @@ object deps {
 
     const val coilCompose = "io.coil-kt:coil-compose:2.4.0"
     const val voyagerNavigator = "cafe.adriel.voyager:voyager-navigator:1.0.0-rc06"
+    // Google accompanist
+    const val accompanist = "com.google.accompanist:accompanist-pager-indicators:0.30.1"
 }
 
 private typealias PDsS = PluginDependenciesSpec

@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DogRandomImageResponse(
+data class DogImageListResponse(
     @SerialName("message")
-    val message: String = "",
+    val message: List<String> = listOf(),
     @SerialName("status")
     val status: String = ""
 )

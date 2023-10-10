@@ -6,5 +6,5 @@ sealed class ApiResult<T>(
 ) {
     class Success<T>(data: T? = null) : ApiResult<T>(data)
     class Loading<T> : ApiResult<T>()
-    class Error<T>(data: T? = null, errorCode: Int) : ApiResult<T>(data, errorCode)
+    class Error<T>(data: T? = null, errorCode: Int = 0) : ApiResult<T>(data, errorCode)
 }
