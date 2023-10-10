@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DogList</string>
+    <string name="home_title">Canine Collection</string>
+    <string name="home_sub_title">A Bark-tastic List</string>
+    <string name="progress_loader_text">Fetching the Best Canines…</string>
+    <string name="sub_breeds">Sub-breeds - %1$s</string>
+    <string name="no_sub_breeds">No available sub-breed !</string>
+    <string name="content_desc_image">Image of %1$s</string>
+    <string name="content_desc_no_image">No image</string>
+</resources>
