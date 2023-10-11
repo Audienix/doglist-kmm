@@ -26,9 +26,21 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
+/**
+ * An open class for loading dog-related data using an HTTP client.
+ *
+ * @param httpClient The HTTP client for making requests.
+ * @constructor Creates a [DogAppLoader] instance.
+ * @author Arighna Maity
+ */
 internal open class DogAppLoader(
     private val httpClient: HttpClient
 ) {
+    /**
+     * Get a list of dog breeds.
+     *
+     * @return An [ApiResult] containing a list of dog breeds.
+     */
     suspend fun getDogList(): ApiResult<List<DogBreed>> {
         try {
             val dogBreedList = mutableListOf<DogBreed>()
@@ -41,6 +53,7 @@ internal open class DogAppLoader(
             val dogBreedNameWithSubBreedList = mutableListOf<DogBreedWithSubBreeds>()
             if (api.status == HttpStatusCode.OK) {
                 val body = api.body<DogListResponse>()
+                // Process the dog breed data
                 body.message.entries.forEach { dogMap ->
                     dogBreedNameWithSubBreedList.add(
                         //Joining all the subbreeds by comma
@@ -52,6 +65,7 @@ internal open class DogAppLoader(
                         )
                     )
                 }
+                // Prepare dog breed list with images asynchronously
                 withContext(Dispatchers.IO) {
                     prepareDogsBreedListWithImage(
                         this,
@@ -73,7 +87,7 @@ internal open class DogAppLoader(
         dogBreedList: MutableList<DogBreed>,
     ) {
         var iterator = 0
-
+        // Asynchronously fetch images for dog breeds
         scope.asyncAll(dogBreedNameWithSubBreedList) {
             val endPoint = DOG_RANDOM_IMAGE_ENDPOINT.replace("%s", it.name)
             httpClient.get(
@@ -99,10 +113,17 @@ internal open class DogAppLoader(
             }
     }
 
+    /**
+     * Get a list of dog images for a specific breed.
+     *
+     * @param breed The name of the dog breed.
+     * @return A list of URLs for dog images.
+     */
     suspend fun getDogImages(breed: String): List<String> {
         try {
             var dogImages = listOf<String>()
-            val endPoint = DOG_IMAGE_LIST_ENDPOINT.replace("%s", breed.toLowerCasePreservingASCIIRules())
+            val endPoint =
+                DOG_IMAGE_LIST_ENDPOINT.replace("%s", breed.toLowerCasePreservingASCIIRules())
             val api = httpClient.get(
                 URLBuilder(Url(BASE_URL))
                     .apply {

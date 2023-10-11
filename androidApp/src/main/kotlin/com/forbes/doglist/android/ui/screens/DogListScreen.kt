@@ -15,15 +15,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.forbes.doglist.app.AppActions
-import com.forbes.doglist.app.DogListStore
 import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.components.DogListItemCard
 import com.forbes.doglist.android.ui.components.LoadingState
@@ -31,18 +28,25 @@ import com.forbes.doglist.android.ui.components.TopBar
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 import com.forbes.doglist.android.ui.theme.SetStatusBarColor
 import com.forbes.doglist.android.utils.getGridCellCount
-import com.forbes.doglist.app.SideEffect
+import com.forbes.doglist.app.AppActions
 import com.forbes.doglist.app.DogListState
+import com.forbes.doglist.app.DogListStore
+import com.forbes.doglist.app.SideEffect
 import kotlinx.coroutines.flow.filterIsInstance
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * A screen for displaying a list of dog breeds.
+ *
+ * @author Arighna Maity
+ */
 class DogListScreen : Screen, KoinComponent {
 
     @Composable
     override fun Content() {
         SetStatusBarColor(statusBarColor = MaterialColorPalette.surfaceContainerLow)
-        val state = getNetworkState()
+        val state = getDogListAPIState()
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
@@ -60,8 +64,14 @@ class DogListScreen : Screen, KoinComponent {
         )
     }
 
+    /**
+     * Get the state of the DogList API call.
+     *
+     * @return The state of the DogList API call.
+     * @author Arighna Maity
+     */
     @Composable
-    private fun getNetworkState(): State<DogListState> {
+    private fun getDogListAPIState(): State<DogListState> {
         val store: DogListStore by inject()
         val error = store.observeSideEffect()
             .filterIsInstance<SideEffect.Error>()
@@ -99,10 +109,10 @@ private fun ShowDogListScreenContent(
         val navigator = LocalNavigator.currentOrThrow
         LazyVerticalGrid(
             modifier = modifier.padding(dimensionResource(id = R.dimen.dimension_8dp)),
-            columns = GridCells.Fixed(getGridCellCount(configuration = LocalConfiguration.current)),
+            columns = GridCells.Fixed(getGridCellCount()),
             contentPadding = padding,
             content = {
-                itemsIndexed(dogs) { i, dog ->
+                itemsIndexed(dogs) { _, dog ->
                     DogListItemCard(dog = dog, onItemClicked = {
                         navigator.push(item = DogDetailsScreen(dog))
                     })

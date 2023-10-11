@@ -1,5 +1,11 @@
 package com.forbes.doglist.util.constants
 
+/**
+ * Object containing constant URL values for the application.
+ * It defines the base URL and various endpoints.
+ *
+ * @author Arighna Maity
+ */
 object URLConstants {
 
     const val BASE_URL = "https://dog.ceo/"

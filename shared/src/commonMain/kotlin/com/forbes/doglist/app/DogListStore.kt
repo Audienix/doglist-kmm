@@ -11,6 +11,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Data class representing the state of dog list in the app.
+ *
+ * @property progress Indicates if data is being loaded.
+ * @property dogBreeds List of dog breeds.
+ * @constructor Creates a [DogListState] instance.
+ * @author Arighna Maity
+ */
 data class DogListState(
     val progress: Boolean,
     val dogBreeds: List<DogBreed>
@@ -20,6 +28,13 @@ sealed class SideEffect : Effect {
     data class Error(val error: Exception) : SideEffect()
 }
 
+/**
+ * Store responsible for managing the state of dog list in the app.
+ *
+ * @param dogAppReader The reader for accessing dog-related data.
+ * @constructor Creates a [DogListStore] instance.
+ * @author Arighna Maity
+ */
 class DogListStore(
     private val dogAppReader: DogAppReader
 ) : Store<DogListState, AppActions, SideEffect>,

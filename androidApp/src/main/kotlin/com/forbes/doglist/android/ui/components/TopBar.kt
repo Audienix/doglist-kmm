@@ -16,8 +16,10 @@ import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 
 /**
- * Composable for TopBar of the DogList Home screen.
+ * Composable for displaying a top app bar with a title and an optional navigation icon.
  *
+ * @param title The title to be displayed in the top app bar.
+ * @param navIcon An optional composable for the navigation icon.
  * @author Arighna Maity
  */
 @OptIn(ExperimentalMaterial3Api::class)

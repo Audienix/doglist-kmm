@@ -1,5 +1,8 @@
 package com.forbes.doglist
 
+import com.forbes.doglist.util.constants.NumberConstants.CONNECT_TIMEOUT
+import com.forbes.doglist.util.constants.NumberConstants.REQUEST_TIMEOUT
+import com.forbes.doglist.util.constants.NumberConstants.SOCKET_TIMEOUT
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -7,19 +10,25 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import java.util.concurrent.TimeUnit
 
+/**
+ * Create an HTTP client for Android using OkHttp.
+ *
+ * @return An instance of HttpClient configured for Android.
+ * @author Arighna Maity
+ */
 internal fun androidHttpClient() = HttpClient(OkHttp) {
     engine {
         config {
             retryOnConnectionFailure(true)
-            connectTimeout(10, TimeUnit.SECONDS)
+            connectTimeout(CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
         }
     }
     install(ContentNegotiation) {
         json()
     }
     install(HttpTimeout) {
-        requestTimeoutMillis = 15_000
-        connectTimeoutMillis = 10_000
-        socketTimeoutMillis = 10_000
+        requestTimeoutMillis = REQUEST_TIMEOUT
+        connectTimeoutMillis = CONNECT_TIMEOUT
+        socketTimeoutMillis = SOCKET_TIMEOUT
     }
 }

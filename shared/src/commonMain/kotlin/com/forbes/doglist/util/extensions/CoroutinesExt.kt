@@ -5,7 +5,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 
 /**
- * This is the asyncAll coroutines extension function used in [DogListLoader].
+ * This is the asyncAll coroutines extension function used in [DogAppLoader].
  *
  * @author: Arighna Maity
  */

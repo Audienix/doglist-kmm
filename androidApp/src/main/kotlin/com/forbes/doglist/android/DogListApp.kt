@@ -9,6 +9,11 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
+/**
+ * Application class for the Dog List app.
+ *
+ * @author Arighna Maity
+ */
 class DogListApp : Application() {
 
     override fun onCreate() {

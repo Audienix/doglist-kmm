@@ -15,6 +15,13 @@ import androidx.compose.ui.res.dimensionResource
 import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 
+/**
+ * Composable for displaying a loading state with an optional loading text.
+ *
+ * @param modifier The modifier for customizing the layout of the composable.
+ * @param loadingText The optional text to be displayed alongside the loading indicator.
+ * @author Arighna Maity
+ */
 @Composable
 fun LoadingState(modifier: Modifier = Modifier, loadingText: String = "") {
     Column(

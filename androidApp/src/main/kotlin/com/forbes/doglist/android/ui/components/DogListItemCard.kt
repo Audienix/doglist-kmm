@@ -51,7 +51,7 @@ fun DogListItemCard(dog: DogBreed, onItemClicked: (dogBreed: DogBreed) -> Unit) 
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.dimension_8dp))
         ) {
 
-            DogImagePreview(
+            DogImage(
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen.dimension_64dp))
                     .clip(Shapes.medium),

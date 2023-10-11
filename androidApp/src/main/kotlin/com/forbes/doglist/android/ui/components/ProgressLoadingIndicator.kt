@@ -24,6 +24,11 @@ import androidx.compose.ui.text.style.TextAlign
 import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 
+/**
+ * Composable for displaying a progress loading indicator.
+ *
+ * @author Arighna Maity
+ */
 @Composable
 fun ProgressLoadingIndicator() {
     val animation = rememberInfiniteTransition(label = "")
@@ -35,7 +40,6 @@ fun ProgressLoadingIndicator() {
             repeatMode = RepeatMode.Restart,
         ), label = ""
     )
-
     Box(
         modifier = Modifier
             .size(dimensionResource(id = R.dimen.dimension_64dp))

@@ -7,6 +7,11 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.forbes.doglist.android.ui.screens.DogListScreen
 import com.forbes.doglist.android.ui.theme.AppBackground
 
+/**
+ * The main activity of the Dog List app.
+ *
+ * @author Arighna Maity
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

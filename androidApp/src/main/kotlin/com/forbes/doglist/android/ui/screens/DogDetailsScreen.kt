@@ -1,8 +1,6 @@
 package com.forbes.doglist.android.ui.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -11,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.MaterialTheme
@@ -22,11 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -35,8 +29,9 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.components.AppIconButton
-import com.forbes.doglist.android.ui.components.DogImagePreview
+import com.forbes.doglist.android.ui.components.DogImageCarousel
 import com.forbes.doglist.android.ui.components.LoadingState
+import com.forbes.doglist.android.ui.components.Title
 import com.forbes.doglist.android.ui.components.TopBar
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 import com.forbes.doglist.android.ui.theme.SetStatusBarColor
@@ -44,10 +39,15 @@ import com.forbes.doglist.app.AppActions
 import com.forbes.doglist.app.DogDetailsState
 import com.forbes.doglist.app.DogDetailsStore
 import com.forbes.doglist.core.models.DogBreed
-import com.google.accompanist.pager.HorizontalPagerIndicator
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+/**
+ * A screen for displaying details of a specific dog breed.
+ *
+ * @param dogBreed The dog breed to display details for.
+ * @author Arighna Maity
+ */
 class DogDetailsScreen(private val dogBreed: DogBreed) : Screen, KoinComponent {
     @Composable
     override fun Content() {
@@ -130,56 +130,5 @@ class DogDetailsScreen(private val dogBreed: DogBreed) : Screen, KoinComponent {
                 )
             }
         }
-    }
-
-    @Composable
-    @OptIn(ExperimentalFoundationApi::class)
-    private fun DogImageCarousel(
-        modifier: Modifier = Modifier,
-        value: List<String>,
-        breed: DogBreed
-    ) {
-        val pagerState = rememberPagerState(
-            initialPage = 0,
-            initialPageOffsetFraction = 0f,
-            pageCount = { value.size }
-        )
-        Box(modifier = modifier) {
-            HorizontalPager(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(3f / 4f),
-                state = pagerState
-            ) { page ->
-                DogImagePreview(
-                    dogBreed = breed.name,
-                    imageUrl = value[page]
-                )
-            }
-            if (value.size > 1) {
-                HorizontalPagerIndicator(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(dimensionResource(id = R.dimen.dimension_16dp)),
-                    pageCount = value.size,
-                    pagerState = pagerState,
-                    activeColor = MaterialColorPalette.surfaceContainerLowest,
-                )
-            }
-        }
-    }
-
-    @Composable
-    fun Title(title: String) {
-        Text(
-            text = title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 0.dp, 0.dp, 0.dp),
-            color = MaterialColorPalette.primary,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.W600,
-            textAlign = TextAlign.Start
-        )
     }
 }
