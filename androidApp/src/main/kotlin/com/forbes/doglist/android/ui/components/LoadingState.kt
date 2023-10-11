@@ -12,12 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 
 @Composable
-fun LoadingState(modifier: Modifier) {
+fun LoadingState(modifier: Modifier = Modifier, loadingText: String = "") {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -31,7 +30,7 @@ fun LoadingState(modifier: Modifier) {
         ProgressLoadingIndicator()
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dimension_8dp)))
         Text(
-            text = stringResource(id = R.string.progress_loader_text),
+            text = loadingText,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialColorPalette.onSurfaceVariant
         )

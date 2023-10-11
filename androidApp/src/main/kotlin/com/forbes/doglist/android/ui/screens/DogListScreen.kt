@@ -91,7 +91,10 @@ private fun ShowDogListScreenContent(
     val dogs = remember(state.value.dogBreeds) { state.value.dogBreeds }
 
     if (state.value.progress && state.value.dogBreeds.isEmpty()) {
-        LoadingState(modifier)
+        LoadingState(
+            modifier = modifier,
+            loadingText = stringResource(id = R.string.progress_loader_text)
+        )
     } else {
         val navigator = LocalNavigator.currentOrThrow
         LazyVerticalGrid(
