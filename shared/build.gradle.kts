@@ -35,10 +35,6 @@ kotlin {
                 implementation(deps.serialization.core)
                 implementation(deps.serialization.json)
 
-                // Arrow-kt
-                api(deps.arrow.core)
-                implementation(deps.arrow.fx)
-
                 // Ktor
                 implementation(deps.ktor.core)
                 implementation(deps.ktor.clientJson)

@@ -32,12 +32,6 @@ object deps {
         const val core = "org.jetbrains.kotlinx:kotlinx-serialization-core:$version"
     }
 
-    object arrow {
-        private const val version = "1.2.1"
-        const val core = "io.arrow-kt:arrow-core:$version"
-        const val fx = "io.arrow-kt:arrow-fx-coroutines:$version"
-    }
-
     object compose {
         const val androidxComposeCompilerVersion = "1.5.3"
         const val bom = "androidx.compose:compose-bom:2023.09.01"
@@ -66,8 +60,13 @@ object deps {
         const val serializationKotlinXJson = "io.ktor:ktor-serialization-kotlinx-json:$version"
     }
 
+    object test {
+        const val junit = "junit:junit:4.13.2"
+    }
+
     const val coilCompose = "io.coil-kt:coil-compose:2.4.0"
     const val voyagerNavigator = "cafe.adriel.voyager:voyager-navigator:1.0.0-rc06"
+
     // Google accompanist
     const val accompanist = "com.google.accompanist:accompanist-pager-indicators:0.30.1"
 }
