@@ -1,5 +1,6 @@
 package com.forbes.doglist.android.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +37,7 @@ import com.forbes.doglist.android.ui.components.Title
 import com.forbes.doglist.android.ui.components.TopBar
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 import com.forbes.doglist.android.ui.theme.SetStatusBarColor
+import com.forbes.doglist.android.utils.NetworkUtils
 import com.forbes.doglist.app.AppActions
 import com.forbes.doglist.app.DogDetailsState
 import com.forbes.doglist.app.DogDetailsStore
@@ -91,45 +94,53 @@ class DogDetailsScreen(private val dogBreed: DogBreed) : Screen, KoinComponent {
         breed: DogBreed,
         state: State<DogDetailsState>
     ) {
-        LazyColumn(
-            modifier = modifier.fillMaxSize()
-        ) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(3f / 4f)
-                ) {
-                    if (state.value.progress && state.value.dogImages.isEmpty()) {
-                        LoadingState(
-                            modifier = modifier,
-                            loadingText = stringResource(id = R.string.progress_loader_text)
-                        )
-                    } else {
-                        DogImageCarousel(value = state.value.dogImages, breed = breed)
+        if (!NetworkUtils.isConnected(LocalContext.current)) {
+            Toast.makeText(
+                LocalContext.current,
+                stringResource(R.string.no_internet_connection),
+                Toast.LENGTH_LONG
+            ).show()
+        } else {
+            LazyColumn(
+                modifier = modifier.fillMaxSize()
+            ) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(3f / 4f)
+                    ) {
+                        if (state.value.progress && state.value.dogImages.isEmpty()) {
+                            LoadingState(
+                                modifier = modifier,
+                                loadingText = stringResource(id = R.string.progress_loader_text)
+                            )
+                        } else {
+                            DogImageCarousel(value = state.value.dogImages, breed = breed)
+                        }
                     }
                 }
-            }
-            item {
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dimension_16dp)))
-                Title(title = stringResource(id = R.string.title_sub_breed))
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dimension_8dp)))
-            }
-
-            item {
-                var text = stringResource(id = R.string.no_sub_breeds)
-                if (breed.subBreeds.isNotEmpty()) {
-                    text = breed.subBreeds
+                item {
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dimension_16dp)))
+                    Title(title = stringResource(id = R.string.title_sub_breed))
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dimension_8dp)))
                 }
-                Text(
-                    text = text,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 0.dp, 0.dp, 0.dp),
-                    color = MaterialColorPalette.onSurface,
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Start
-                )
+
+                item {
+                    var text = stringResource(id = R.string.no_sub_breeds)
+                    if (breed.subBreeds.isNotEmpty()) {
+                        text = breed.subBreeds
+                    }
+                    Text(
+                        text = text,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp, 0.dp, 0.dp, 0.dp),
+                        color = MaterialColorPalette.onSurface,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Start
+                    )
+                }
             }
         }
     }

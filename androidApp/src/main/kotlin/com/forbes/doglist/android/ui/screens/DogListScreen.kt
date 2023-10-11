@@ -27,6 +27,7 @@ import com.forbes.doglist.android.ui.components.LoadingState
 import com.forbes.doglist.android.ui.components.TopBar
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
 import com.forbes.doglist.android.ui.theme.SetStatusBarColor
+import com.forbes.doglist.android.utils.NetworkUtils
 import com.forbes.doglist.android.utils.getGridCellCount
 import com.forbes.doglist.app.AppActions
 import com.forbes.doglist.app.DogListState
@@ -98,25 +99,33 @@ private fun ShowDogListScreenContent(
     padding: PaddingValues,
     state: State<DogListState>
 ) {
-    val dogs = remember(state.value.dogBreeds) { state.value.dogBreeds }
-
-    if (state.value.progress && state.value.dogBreeds.isEmpty()) {
-        LoadingState(
-            modifier = modifier,
-            loadingText = stringResource(id = R.string.progress_loader_text)
-        )
+    if (!NetworkUtils.isConnected(LocalContext.current)) {
+        Toast.makeText(
+            LocalContext.current,
+            stringResource(R.string.no_internet_connection),
+            Toast.LENGTH_LONG
+        ).show()
     } else {
-        val navigator = LocalNavigator.currentOrThrow
-        LazyVerticalGrid(
-            modifier = modifier.padding(dimensionResource(id = R.dimen.dimension_8dp)),
-            columns = GridCells.Fixed(getGridCellCount()),
-            contentPadding = padding,
-            content = {
-                itemsIndexed(dogs) { _, dog ->
-                    DogListItemCard(dog = dog, onItemClicked = {
-                        navigator.push(item = DogDetailsScreen(dog))
-                    })
-                }
-            })
+        val dogs = remember(state.value.dogBreeds) { state.value.dogBreeds }
+
+        if (state.value.progress && state.value.dogBreeds.isEmpty()) {
+            LoadingState(
+                modifier = modifier,
+                loadingText = stringResource(id = R.string.progress_loader_text)
+            )
+        } else {
+            val navigator = LocalNavigator.currentOrThrow
+            LazyVerticalGrid(
+                modifier = modifier.padding(dimensionResource(id = R.dimen.dimension_8dp)),
+                columns = GridCells.Fixed(getGridCellCount()),
+                contentPadding = padding,
+                content = {
+                    itemsIndexed(dogs) { _, dog ->
+                        DogListItemCard(dog = dog, onItemClicked = {
+                            navigator.push(item = DogDetailsScreen(dog))
+                        })
+                    }
+                })
+        }
     }
 }
