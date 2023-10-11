@@ -30,7 +30,7 @@ class DogAppReader internal constructor(
      * @throws Exception if there's an error during the data retrieval.
      */
     @Throws(Exception::class)
-    suspend fun getDogImages(breed: String): List<String> =
+    suspend fun getDogImages(breed: String): ApiResult<List<String>> =
         dogAppLoader.getDogImages(breed)
 
     companion object

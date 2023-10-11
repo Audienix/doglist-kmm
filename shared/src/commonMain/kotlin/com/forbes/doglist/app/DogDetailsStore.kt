@@ -57,8 +57,8 @@ class DogDetailsStore(
 
             is AppActions.DisplayDogImages -> {
                 if (oldState.progress) {
-                    val dogImages = action.imageList
-                    DogDetailsState(false, dogImages)
+                    val dogImages = action.imageList.data
+                    dogImages?.let { images-> DogDetailsState(false, images) }
                 } else {
                     launch { sideEffect.emit(SideEffect.Error(Exception("Unexpected action"))) }
                     oldState
@@ -79,7 +79,9 @@ class DogDetailsStore(
         }
 
         if (newState != oldState) {
-            state.value = newState
+            if (newState != null) {
+                state.value = newState
+            }
         }
     }
 

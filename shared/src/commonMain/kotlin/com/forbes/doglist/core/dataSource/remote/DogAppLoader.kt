@@ -56,7 +56,7 @@ internal open class DogAppLoader(
                 // Process the dog breed data
                 body.message.entries.forEach { dogMap ->
                     dogBreedNameWithSubBreedList.add(
-                        //Joining all the subbreeds by comma
+                        //Joining all the subBreeds by comma
                         DogBreedWithSubBreeds(
                             dogMap.key,
                             dogMap.value.joinToString(", ") { subBreed ->
@@ -119,9 +119,9 @@ internal open class DogAppLoader(
      * @param breed The name of the dog breed.
      * @return A list of URLs for dog images.
      */
-    suspend fun getDogImages(breed: String): List<String> {
+    suspend fun getDogImages(breed: String): ApiResult<List<String>> {
         try {
-            var dogImages = listOf<String>()
+            val dogImages: List<String>
             val endPoint =
                 DOG_IMAGE_LIST_ENDPOINT.replace("%s", breed.toLowerCasePreservingASCIIRules())
             val api = httpClient.get(
@@ -133,10 +133,11 @@ internal open class DogAppLoader(
             if (api.status == HttpStatusCode.OK) {
                 val body = api.body<DogImageListResponse>()
                 dogImages = body.message
-            }
-            return dogImages
+            } else
+                return ApiResult.Error(errorCode = api.status.value)
+            return ApiResult.Success(data = dogImages)
         } catch (ex: Exception) {
-            return listOf()
+            return ApiResult.Error(errorCode = ex.hashCode())
         }
     }
 }

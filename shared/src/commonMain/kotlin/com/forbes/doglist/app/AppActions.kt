@@ -12,6 +12,6 @@ sealed class AppActions : Action {
     data object FetchDogList : AppActions()
     data class DisplayDogList(val listApiResult: ApiResult<List<DogBreed>>) : AppActions()
     data class FetchDogImages(val breed: String) : AppActions()
-    data class DisplayDogImages(val imageList: List<String>) : AppActions()
+    data class DisplayDogImages(val imageList: ApiResult<List<String>>) : AppActions()
     data class Error(val error: Exception) : AppActions()
 }
