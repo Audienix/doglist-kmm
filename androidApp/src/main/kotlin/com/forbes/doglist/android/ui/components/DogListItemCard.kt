@@ -18,6 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.forbes.doglist.android.R
 import com.forbes.doglist.android.ui.theme.MaterialColorPalette
@@ -67,19 +71,48 @@ fun DogListItemCard(dog: DogBreed, onItemClicked: (dogBreed: DogBreed) -> Unit) 
                     color = MaterialColorPalette.onSurface,
                     style = typography.titleMedium
                 )
-                var subBreed = stringResource(
-                    R.string.sub_breeds,
-                    dog.subBreeds
-                )
-                if (dog.subBreeds.isEmpty())
-                    subBreed = stringResource(id = R.string.no_sub_breeds)
-                Text(
-                    text = subBreed,
-                    style = typography.bodyMedium,
-                    color = MaterialColorPalette.onSurfaceVariant
-                )
+                SubBreed(dog)
             }
         }
+    }
+}
+
+/**
+ * Composable for showing all available sub-breeds of a dog breed.
+ *
+ * @author: Arighna Maity
+ */
+@Composable
+private fun SubBreed(dog: DogBreed) {
+    var subBreed = stringResource(
+        R.string.sub_breeds,
+        dog.subBreeds
+    )
+    if (dog.subBreeds.isEmpty())
+        subBreed = stringResource(id = R.string.no_sub_breeds)
+
+    val subBreedsList = subBreed.split(", ").toMutableList()
+
+    if (subBreedsList.size > 1) {
+        val nMore = subBreedsList.size - 1
+        val formattedText = buildAnnotatedString {
+            append(subBreedsList[0])
+            append(" ")
+            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                append(stringResource(R.string.more_ellipsis, nMore))
+            }
+        }
+        Text(
+            text = formattedText,
+            style = typography.bodyMedium,
+            color = MaterialColorPalette.onSurfaceVariant
+        )
+    } else {
+        Text(
+            text = subBreed,
+            style = typography.bodyMedium,
+            color = MaterialColorPalette.onSurfaceVariant
+        )
     }
 }
 

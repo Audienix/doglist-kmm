@@ -56,8 +56,7 @@ class DogDetailsScreen(private val dogBreed: DogBreed) : Screen, KoinComponent {
         val store: DogDetailsStore by inject()
         val state = store.observeState().collectAsState()
         LaunchedEffect(Unit) {
-            if (state.value.dogImages.isEmpty())
-                store.dispatch(AppActions.FetchDogImages(dogBreed.name))
+            store.dispatch(AppActions.FetchDogImages(dogBreed.name))
         }
 
         Scaffold(
@@ -67,7 +66,10 @@ class DogDetailsScreen(private val dogBreed: DogBreed) : Screen, KoinComponent {
             topBar = {
                 TopBar(title = dogBreed.name, navIcon = {
                     val navigator: Navigator = LocalNavigator.currentOrThrow
-                    AppIconButton(imageVector = Icons.Filled.ArrowBack) { navigator.pop() }
+                    AppIconButton(
+                        tint = MaterialColorPalette.onSurfaceVariant,
+                        imageVector = Icons.Filled.ArrowBack
+                    ) { navigator.pop() }
                 })
             },
             content = { padding ->

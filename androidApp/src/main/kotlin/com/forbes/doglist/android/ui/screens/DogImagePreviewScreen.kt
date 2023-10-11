@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -42,7 +43,10 @@ class DogImagePreviewScreen(
                 contentScale = getImageContentScale()
             )
             val navigator: Navigator = LocalNavigator.currentOrThrow
-            AppIconButton(imageVector = Icons.Filled.Close) { navigator.pop() }
+            AppIconButton(
+                imageVector = Icons.Filled.Close,
+                tint = Color.White
+            ) { navigator.pop() }
         }
     }
 }
