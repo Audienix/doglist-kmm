@@ -19,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -58,8 +60,15 @@ class DogDetailsScreen(private val dogBreed: DogBreed) : Screen, KoinComponent {
 
         val store: DogDetailsStore by inject()
         val state = store.observeState().collectAsState()
-        LaunchedEffect(Unit) {
-            store.dispatch(AppActions.FetchDogImages(dogBreed.name))
+        val currentDogName =
+            rememberSaveable {  mutableStateOf("") }
+
+        LaunchedEffect(currentDogName.value) {
+            // Ensuring API is called only when navigated from DogList Screen
+            if (currentDogName.value != dogBreed.name) {
+                store.dispatch(AppActions.FetchDogImages(dogBreed.name))
+                currentDogName.value = dogBreed.name
+            }
         }
 
         Scaffold(
@@ -110,13 +119,16 @@ class DogDetailsScreen(private val dogBreed: DogBreed) : Screen, KoinComponent {
                             .fillMaxWidth()
                             .aspectRatio(3f / 4f)
                     ) {
-                        if (state.value.progress && state.value.dogImages.isEmpty()) {
+                        val dogImages =
+                            rememberSaveable(state.value.dogImages) { state.value.dogImages }
+
+                        if (state.value.progress && dogImages.isEmpty()) {
                             LoadingState(
                                 modifier = modifier,
                                 loadingText = stringResource(id = R.string.progress_loader_text)
                             )
                         } else {
-                            DogImageCarousel(value = state.value.dogImages, breed = breed)
+                            DogImageCarousel(value = dogImages, breed = breed)
                         }
                     }
                 }

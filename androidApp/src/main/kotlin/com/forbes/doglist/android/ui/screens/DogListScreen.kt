@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -106,9 +106,10 @@ private fun ShowDogListScreenContent(
             Toast.LENGTH_LONG
         ).show()
     } else {
-        val dogs = remember(state.value.dogBreeds) { state.value.dogBreeds }
+        // To save data on configuration change. Better way would be caching in local DB
+        val dogs = rememberSaveable(state.value.dogBreeds) { state.value.dogBreeds }
 
-        if (state.value.progress && state.value.dogBreeds.isEmpty()) {
+        if (state.value.progress && dogs.isEmpty()) {
             LoadingState(
                 modifier = modifier,
                 loadingText = stringResource(id = R.string.progress_loader_text)
