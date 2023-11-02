@@ -60,7 +60,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.forbes.doglist"
+    namespace = "com.audienix.doglist"
     compileSdk = 34
     defaultConfig {
         minSdk = 24

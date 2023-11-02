@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    namespace = "com.forbes.doglist.android"
+    namespace = "com.audienix.doglist.android"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.forbes.doglist.android"
+        applicationId = "com.audienix.doglist.android"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
